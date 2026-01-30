@@ -2,7 +2,7 @@
 
 ## What it is
 
-A Node.js test automation framework that enforces basic governance rules for enterprise teams. It validates that your repository has the right folder structure and that branches/PRs include ticket keys (like ABC-123). Uses Playwright for browser testing and Cucumber for BDD scenarios.
+A Node.js test automation framework that enforces basic governance rules for enterprise teams. It validates required repository structure and enforces ticket-based traceability by requiring a Jira-style key (for example, ABC-123) in branch names or pull request titles. It Uses Playwright for browser testing and Cucumber for BDD scenarios.
 
 ## Folder Structure
 
