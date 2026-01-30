@@ -1,239 +1,237 @@
 # Enterprise Test Automation Governance Framework
 
-A comprehensive Node.js-based test automation framework designed for enterprise environments, focusing on validation, approvals, and reporting rather than application logic.
+## Overview
 
-## 🏗️ Framework Structure
+This repository contains a comprehensive test automation governance framework designed for enterprise environments. The framework enforces quality gates, validation processes, and standardized reporting across development teams while maintaining simplicity and reliability.
+
+## Architecture
+
+The framework is built on Node.js with Playwright for browser automation and Cucumber for behavior-driven development. It focuses on governance, validation, and reporting rather than application-specific testing logic.
+
+### Directory Structure
 
 ```
 enterprise-test-automation-governance/
-├── features/                   # Cucumber feature files
-│   └── example.feature        # Sample BDD scenarios
-├── steps/                     # Step definitions
-│   └── example.steps.js       # Cucumber step implementations
-├── pages/                     # Page Object Model
-│   └── example.page.js        # Page object patterns
+├── features/                   # Cucumber feature files (BDD scenarios)
+├── steps/                     # Step definitions for Cucumber scenarios
+├── pages/                     # Page Object Model implementations
 ├── scripts/validation/        # Governance validation scripts
-│   ├── validate-framework.js  # Framework structure validation
-│   └── validate-jira.js       # Jira ticket validation
-├── .github/workflows/         # CI/CD pipelines
-│   ├── pr-validation.yml      # Pull request validation
-│   └── release.yml            # Release pipeline with approvals
-├── reports/                   # Test reports and artifacts
-│   └── README.md              # Report documentation
+├── .github/workflows/         # CI/CD pipeline definitions
+├── reports/                   # Generated test reports and artifacts
 └── package.json               # Project dependencies and scripts
 ```
 
-## 🚀 Quick Start
+## Prerequisites
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Git
+- Node.js 18 or higher
+- npm package manager
+- Git version control
+- GitHub repository with Actions enabled
 
-### Installation
+## Installation
+
+1. Clone the repository:
 ```bash
-# Clone the repository
 git clone <repository-url>
 cd enterprise-test-automation-governance
+```
 
-# Install dependencies
+2. Install dependencies:
+```bash
 npm install
-
-# Install Playwright browsers
 npx playwright install --with-deps
 ```
 
-### Validation
+3. Verify installation:
 ```bash
-# Validate framework structure
 npm run validate:framework
-
-# Validate Jira ticket (requires branch/PR with ticket)
-npm run validate:jira
-
-# Run all validations
-npm run validate:all
 ```
 
-## 🔧 Configuration
+## Validation Framework
+
+### Framework Structure Validation
+
+The `validate-framework.js` script ensures all required directories exist:
+- `features/` - Cucumber feature files
+- `steps/` - Step definition implementations  
+- `pages/` - Page object models
+
+Usage:
+```bash
+npm run validate:framework
+```
+
+### Jira Integration Validation
+
+The `validate-jira.js` script enforces ticket traceability by validating that Jira ticket keys exist in branch names or pull request titles.
+
+Expected format: `ABC-123` (project key followed by ticket number)
+
+Usage:
+```bash
+npm run validate:jira
+```
+
+## CI/CD Pipeline
+
+### Pull Request Validation
+
+Automatically triggered on pull requests to main or develop branches:
+
+1. Installs project dependencies
+2. Validates framework structure
+3. Validates Jira ticket presence
+4. Uploads validation results as artifacts
+
+### Release Pipeline
+
+Manual workflow dispatch with environment-specific approvals:
+
+1. Requires manual approval for target environment
+2. Runs comprehensive validation checks
+3. Executes Playwright and Cucumber test suites
+4. Generates HTML reports
+5. Uploads test artifacts
+
+## Configuration
 
 ### Environment Variables
-Create a `.env` file or set environment variables:
+
+Set the following environment variables for full functionality:
 
 ```bash
-# Jira Integration
-JIRA_BASE_URL=https://your-company.atlassian.net
-JIRA_USERNAME=your-email@company.com
-JIRA_API_TOKEN=your-api-token
-JIRA_PROJECT_KEYS=GOV,TEST,AUTO
+# Application under test
+BASE_URL=https://your-application.com
 
-# Test Configuration
-BASE_URL=https://your-app.com
-TEST_USERNAME=test-user
-TEST_PASSWORD=test-password
+# Jira integration (optional)
+JIRA_API_TOKEN=your-jira-api-token
 ```
 
 ### GitHub Secrets
-Configure the following secrets in your repository:
 
-```
-JIRA_BASE_URL          # Jira instance URL
-JIRA_USERNAME          # Jira username/email
-JIRA_API_TOKEN         # Jira API token
-TEST_USERNAME          # Test application username
-TEST_PASSWORD          # Test application password
-```
+Configure these secrets in your repository settings:
 
-## 🎯 Key Features
+- `JIRA_API_TOKEN` - Jira API authentication token
+- Additional environment-specific secrets as needed
 
-### 📋 Governance Validation
-- **Framework Structure**: Validates required directories and files exist
-- **Jira Integration**: Ensures all changes are linked to valid Jira tickets
-- **Security Scanning**: Automated vulnerability and secret detection
-- **Code Quality**: Linting and formatting validation
+### GitHub Environments
 
-### 🔄 CI/CD Integration
-- **Pull Request Validation**: Automated checks on every PR
-- **Manual Approval Gates**: Required approvals for production deployments
-- **Cross-browser Testing**: Chromium, Firefox, and WebKit support
-- **Artifact Management**: Automated report generation and storage
+Create the following environments in your repository:
+- `staging` - For staging deployments
+- `production` - For production deployments with required reviewers
 
-### 📊 Reporting & Analytics
-- **HTML Reports**: Interactive test results with screenshots
-- **GitHub Pages**: Automatic report publishing for production
-- **Artifact Retention**: Configurable retention policies
-- **Integration Ready**: APIs for dashboard and notification integration
+## Test Execution
 
-## 🛠️ Usage
+### Local Testing
 
-### Running Tests
+Run framework validation:
 ```bash
-# Run all tests
+npm run validate:framework
+npm run validate:jira
+```
+
+Execute Playwright tests:
+```bash
 npm test
-
-# Run Cucumber scenarios
-npm run test:cucumber
-
-# Run specific test suites
-npx playwright test --grep @smoke
-npx playwright test --grep @regression
 ```
 
-### Validation Scripts
+Execute Cucumber scenarios:
 ```bash
-# Check framework structure
-node scripts/validation/validate-framework.js
-
-# Validate Jira ticket in branch/PR
-node scripts/validation/validate-jira.js
+npm run test:cucumber
 ```
 
-### CI/CD Workflows
+### CI/CD Testing
 
-#### Pull Request Validation
-Automatically triggered on PR creation/updates:
+Tests are automatically executed through GitHub Actions workflows. Results are available in the Actions tab and as downloadable artifacts.
+
+## Reporting
+
+Test reports are generated in the `reports/` directory:
+
+- **Playwright Reports**: Interactive HTML reports with test results
+- **Cucumber Reports**: BDD scenario execution results
+- **JSON Reports**: Machine-readable test data for integration
+
+Reports are automatically uploaded as GitHub Actions artifacts and are not committed to version control.
+
+## Development Workflow
+
+### Branch Naming Convention
+
+Include Jira ticket keys in branch names:
+```
+feature/ABC-123-implement-validation
+bugfix/DEF-456-fix-reporting-issue
+hotfix/GHI-789-security-patch
+```
+
+### Pull Request Process
+
+1. Create feature branch with Jira ticket key
+2. Implement changes with appropriate tests
+3. Ensure all validation scripts pass locally
+4. Create pull request with ticket key in title
+5. Address automated validation feedback
+6. Obtain code review approval
+7. Merge after all checks pass
+
+## Governance Standards
+
+### Quality Gates
+
+All code changes must pass:
 - Framework structure validation
-- Jira ticket validation
-- Security scanning
-- Smoke test execution
-- Results posted as PR comments
+- Jira ticket traceability validation
+- Automated test execution
+- Code review approval
 
-#### Release Pipeline
-Manual trigger with environment selection:
-- Pre-deployment validation
-- Manual approval gates (production)
-- Full test suite execution
-- Report generation and publishing
-- Notification to stakeholders
+### Approval Process
 
-## 📁 Directory Details
+Production deployments require:
+- Manual approval from designated reviewers
+- Successful completion of all test suites
+- Validation of deployment artifacts
 
-### `/features`
-Cucumber feature files using Gherkin syntax for behavior-driven development.
+### Audit Trail
 
-### `/steps`
-Step definitions that implement the Gherkin scenarios using Playwright.
+All deployments maintain complete audit trails including:
+- Jira ticket references
+- Test execution results
+- Approval records
+- Deployment timestamps
 
-### `/pages`
-Page Object Model implementations for maintainable test code.
-
-### `/scripts/validation`
-Governance scripts that enforce framework standards and integrations.
-
-### `/.github/workflows`
-GitHub Actions workflows for automated validation and deployment.
-
-### `/reports`
-Generated test reports, screenshots, and artifacts.
-
-## 🔒 Security & Compliance
-
-### Secret Management
-- No hardcoded credentials in code
-- GitHub Secrets for sensitive data
-- Environment-specific configuration
-- Automated secret scanning
-
-### Access Controls
-- Manual approval gates for production
-- Environment-specific permissions
-- Audit trails for all deployments
-- Role-based access controls
-
-### Data Protection
-- Sanitized test data in reports
-- Secure artifact storage
-- Configurable retention policies
-- GDPR compliance considerations
-
-## 🤝 Contributing
-
-### Branch Naming
-Include Jira ticket key in branch names:
-```
-feature/GOV-123-add-validation
-bugfix/TEST-456-fix-reporting
-hotfix/AUTO-789-security-patch
-```
-
-### Pull Request Requirements
-- Jira ticket key in PR title or branch name
-- All validation checks must pass
-- Code review approval required
-- Documentation updates for new features
-
-### Development Workflow
-1. Create feature branch with Jira ticket
-2. Implement changes with tests
-3. Run local validation: `npm run validate:all`
-4. Create pull request
-5. Address review feedback
-6. Merge after approval
-
-## 📚 Documentation
-
-- [Test Reports Guide](reports/README.md)
-- [Validation Scripts](scripts/validation/)
-- [CI/CD Workflows](.github/workflows/)
-- [Page Objects](pages/)
-
-## 🆘 Support
+## Troubleshooting
 
 ### Common Issues
-- **Validation Failures**: Check framework structure and Jira configuration
-- **Test Failures**: Review screenshots and videos in reports
-- **CI/CD Issues**: Check workflow logs and environment variables
 
-### Getting Help
-- Create an issue in this repository
-- Contact the Test Automation Team
-- Review documentation and examples
-- Check GitHub Actions logs for detailed error messages
+**Framework Validation Failures**
+- Verify all required directories exist
+- Check file permissions and accessibility
 
-## 📄 License
+**Jira Validation Failures**
+- Ensure branch name or PR title contains valid ticket key
+- Verify ticket key format matches pattern ABC-123
+- Check Jira API connectivity if using API validation
 
-MIT License - see LICENSE file for details.
+**Test Execution Failures**
+- Review test logs in GitHub Actions
+- Check environment variable configuration
+- Verify browser dependencies are installed
+
+### Support
+
+For technical support or framework enhancement requests:
+1. Create an issue in this repository
+2. Include detailed error messages and logs
+3. Specify environment and configuration details
+4. Tag appropriate team members for review
+
+## License
+
+This project is licensed under the MIT License. See LICENSE file for details.
 
 ---
 
-*Enterprise Test Automation Governance Framework - Ensuring quality through validation, approval, and comprehensive reporting.*
+**Enterprise Test Automation Governance Framework**  
+Version 1.0.0  
+Maintained by the Quality Engineering Team
