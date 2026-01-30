@@ -27,8 +27,21 @@ A Node.js test automation framework that enforces basic governance rules for ent
 git clone https://github.com/acastil7IT/automation-governance-framework
 cd automation-governance-framework
 npm install
+```
+
+### Install Playwright browsers
+
+**macOS:**
+```bash
 npx playwright install
 ```
+
+**Linux:**
+```bash
+npx playwright install --with-deps
+```
+
+*Note: This framework has been tested on Linux (Ubuntu) and macOS.*
 
 ## Run Locally
 
