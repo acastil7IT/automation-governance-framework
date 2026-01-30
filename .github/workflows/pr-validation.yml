@@ -1,0 +1,46 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate framework structure
+        run: npm run validate:framework
+
+      - name: Validate Jira ticket
+        env:
+          GITHUB_PR_TITLE: ${{ github.event.pull_request.title }}
+        run: npm run validate:jira
+
+      - name: Generate validation summary
+        if: always()
+        run: |
+          mkdir -p validation-results
+          echo "# Validation Summary" > validation-results/summary.md
+          echo "PR: ${{ github.event.pull_request.title }}" >> validation-results/summary.md
+          echo "Branch: ${{ github.head_ref }}" >> validation-results/summary.md
+          echo "Status: ${{ job.status }}" >> validation-results/summary.md
+
+      - name: Upload validation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-results
+          path: validation-results/
